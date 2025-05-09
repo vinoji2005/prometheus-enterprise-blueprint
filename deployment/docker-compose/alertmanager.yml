@@ -1,0 +1,19 @@
+global:
+  resolve_timeout: 1m
+
+route:
+  receiver: 'default'
+  group_wait: 10s
+  group_interval: 30s
+  repeat_interval: 1h
+
+receivers:
+  - name: 'default'
+    # Uncomment below to enable email
+    # email_configs:
+    #   - to: 'your-email@example.com'
+    #     from: 'prometheus@example.com'
+    #     smarthost: 'smtp.example.com:587'
+    #     auth_username: 'smtp-user'
+    #     auth_password: 'smtp-password'
+    #     require_tls: true
