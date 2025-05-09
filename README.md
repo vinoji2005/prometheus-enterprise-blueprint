@@ -1,180 +1,138 @@
-📡 Prometheus Enterprise Blueprint
+# 📡 Prometheus Enterprise Blueprint
 
-Welcome to the Prometheus Enterprise Blueprint — your all-in-one GitHub repository for deploying, scaling, and managing Prometheus monitoring in enterprise environments.
+Welcome to the **Prometheus Enterprise Blueprint** — your all-in-one GitHub repository for deploying, scaling, and managing Prometheus monitoring in enterprise environments.
 
 This repo is designed for:
 
-🔰 Beginners who want a hands-on learning path
+* 🔰 **Beginners** who want a hands-on learning path
+* 🏢 **Enterprises** needing scalable, reliable monitoring
+* 🧑‍💻 **DevOps/SREs** setting up 5K–10K node observability stacks
 
-🏢 Enterprises needing scalable, reliable monitoring
+---
 
-🧑‍💻 DevOps/SREs setting up 5K–10K node observability stacks
+## 📁 Repository Structure
 
-🧠 What’s Inside
+| Folder          | Purpose                                                      |
+| --------------- | ------------------------------------------------------------ |
+| `deployment/`   | Install Prometheus via Docker, Kubernetes, or systemd        |
+| `exporters/`    | Setup guides for Linux, Windows, DBs, VMware, SNMP, Blackbox |
+| `dashboards/`   | Ready-to-import Grafana JSON dashboards                      |
+| `alerting/`     | Alertmanager configs and alert rules                         |
+| `architecture/` | Design docs: HA setup, sizing, network ports                 |
+| `examples/`     | PromQL queries, troubleshooting, and common issues           |
+| `scripts/`      | Tools to auto-generate targets or test metrics               |
 
-Folder
+---
 
-Purpose
+## 🚀 Quick Start (Using Docker Compose)
 
-deployment/
-
-Install Prometheus via Docker, Kubernetes, or systemd
-
-exporters/
-
-Setup guides for Linux, Windows, DBs, VMware, SNMP, Blackbox
-
-dashboards/
-
-Ready-to-import Grafana JSON dashboards
-
-alerting/
-
-Alertmanager configs and alert rules
-
-architecture/
-
-Design docs: HA setup, sizing, network ports
-
-examples/
-
-PromQL queries, troubleshooting, and common issues
-
-scripts/
-
-Tools to auto-generate targets or test metrics
-
-🚀 Quick Start (Using Docker Compose)
-
-git clone https://github.com/YOUR_USERNAME/prometheus-enterprise-blueprint.git
+```bash
+git clone https://github.com/vinoji2005/prometheus-enterprise-blueprint.git
 cd prometheus-enterprise-blueprint/deployment/docker-compose
 sudo docker-compose up -d
+```
 
-Access your tools:
+**Access your tools:**
 
-Prometheus: http://localhost:9090
+* Prometheus: [http://localhost:9090](http://localhost:9090)
+* Grafana: [http://localhost:3000](http://localhost:3000) (admin/admin)
+* Node Exporter: [http://localhost:9100](http://localhost:9100)
 
-Grafana: http://localhost:3000 (admin/admin)
+---
 
-Node Exporter: http://localhost:9100
+## 🏗️ Enterprise Architecture Overview
 
-🏗️ Enterprise Architecture Guidance
+See [`architecture/prometheus-ha.md`](architecture/prometheus-ha.md) for:
 
-See architecture/prometheus-ha.md for:
+* Scalable design (up to 10,000 nodes)
+* Hardware sizing (RAM/CPU/Disk)
+* HA architecture (Thanos, federation)
+* Required network ports (9090, 9100, 9093, etc.)
+* Load balancer and multi-DC guidance
 
-How to scale for 5,000–10,000 nodes
+---
 
-Hardware recommendations (RAM/CPU/Disk)
+## 📦 Supported Exporters & Example Metrics
 
-Number of Prometheus servers
+| System           | Exporter           | Example Metric                          |
+| ---------------- | ------------------ | --------------------------------------- |
+| Linux            | node\_exporter     | `node_cpu_seconds_total`                |
+| Windows          | windows\_exporter  | `windows_logical_disk_free_bytes`       |
+| MySQL            | mysqld\_exporter   | `mysql_global_status_threads_connected` |
+| Oracle           | oracle\_exporter   | `oracle_up`                             |
+| VMware           | vmware\_exporter   | `vmware_vm_power_state`                 |
+| Network Devices  | snmp\_exporter     | `ifInOctets`                            |
+| HTTP/Ping Checks | blackbox\_exporter | `probe_success`                         |
 
-Load balancing, HA setup, and federation
+---
 
-Which ports to open (9090, 9100, 9093, etc.)
+## 📊 Dashboards (Grafana)
 
-📦 Supported Systems (With Examples)
+Prebuilt dashboards are in the `dashboards/` folder:
 
-System
+* Node Exporter (Linux/Windows)
+* MySQL, Oracle
+* Kubernetes Cluster
+* Uptime Probes (Blackbox)
 
-Exporter
+**Import dashboards in Grafana:**
 
-Example Metric
+1. Open Grafana
+2. Click “+” → Import
+3. Upload `.json` file or paste dashboard ID
 
-Linux
+---
 
-node_exporter
+## 🔔 Alerts & Rules
 
-node_cpu_seconds_total
+Located in the `alerting/` folder:
 
-Windows
+* `alertmanager.yml` configuration
+* SLA/SLO alert rules
+* Notification integrations (Slack, email, PagerDuty)
 
-windows_exporter
+---
 
-windows_logical_disk_free_bytes
+## 📈 PromQL Examples
 
-MySQL
+See `examples/promql-queries.md` for:
 
-mysqld_exporter
+| Use Case            | PromQL Example                                                                  |
+| ------------------- | ------------------------------------------------------------------------------- |
+| CPU usage           | `100 - (avg by(instance)(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)` |
+| Disk usage          | `node_filesystem_avail_bytes / node_filesystem_size_bytes * 100`                |
+| Down targets (ping) | `probe_success == 0`                                                            |
+| Pod restarts (K8s)  | `kube_pod_container_status_restarts_total > 5`                                  |
 
-mysql_global_status_threads_connected
+---
 
-Oracle
+## 🛠️ Troubleshooting & Utilities
 
-oracle_exporter
+| File                          | Purpose                                  |
+| ----------------------------- | ---------------------------------------- |
+| `examples/troubleshooting.md` | Fix common Prometheus issues             |
+| `scripts/generate-targets.py` | Auto-generate static\_configs or IP list |
+| `scripts/test-endpoints.sh`   | Ping/test targets for reachability       |
 
-oracle_up
+---
 
-VMware
+## 🤝 Contributing
 
-vmware_exporter
+We welcome PRs and issues for:
 
-vmware_vm_power_state
+* New exporters or tools
+* Real-world architecture examples
+* Community dashboard templates
 
-Network Devices
+---
 
-snmp_exporter
+## 📚 References
 
-ifInOctets
+* [Prometheus Docs](https://prometheus.io/docs/introduction/overview/)
+* [Prometheus Exporters List](https://prometheus.io/docs/instrumenting/exporters/)
+* [Thanos Project](https://thanos.io/)
+* [Grafana Dashboards](https://grafana.com/grafana/dashboards)
 
-Ping/HTTP Checks
+---
 
-blackbox_exporter
-
-probe_success
-
-📊 Grafana Dashboards
-
-Prebuilt dashboards are in the dashboards/ folder:
-
-Node Exporter (Linux/Windows)
-
-MySQL, Oracle, Kubernetes
-
-Uptime Probes (Blackbox)
-
-Import them using Grafana UI → "+ Import" → Upload .json
-
-🔔 Alerts & Rules
-
-Use the files in alerting/ to:
-
-Set up HA Alertmanager
-
-Define SLA/SLO-based Prometheus rules
-
-Send alerts via Slack, email, PagerDuty, etc.
-
-📈 Learn PromQL Easily
-
-Find ready-to-use queries in examples/promql-queries.md, like:
-
-CPU usage per node
-
-Memory trend per week
-
-Failed pings / down targets
-
-Pod restarts in Kubernetes
-
-💬 Contributing
-
-We welcome PRs for:
-
-More exporters and dashboards
-
-Real-world tuning configs
-
-Cloud-native or multi-tenant setups
-
-Please open issues for questions or improvements!
-
-🌐 Reference & Credits
-
-Prometheus Docs
-
-Awesome Prometheus Exporters
-
-Thanos Project
-
-Grafana Labs
-
+Let’s build enterprise-grade observability — one metric at a time. 🚀
